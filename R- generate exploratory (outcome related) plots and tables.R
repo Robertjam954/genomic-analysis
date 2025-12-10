@@ -1,6 +1,6 @@
 #!/usr/bin/env Rscript
 """
-Produce exploratory plots and tables (Table 1 and Table 2) from cleaned data.
+Produce generate exploratory (outcome-related) plots and tables (Table 1 and Table 2) from cleaned data.
 
 This script expects the cleaned data RDS produced by `scripts/prepare_descriptive_vars.R`
 and will write plots and tables to `output/descriptive` by default.
@@ -201,3 +201,4 @@ if ('top_5_gene_status' %in% names(df) && 'dfs_status_bin' %in% names(df)) {
 }
 
 message('analysis_tables_and_plots.R finished; outputs in ', outdir)
+
