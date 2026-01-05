@@ -1,0 +1,78 @@
+# Data directories - typically contain large or sensitive files
+data/raw/
+data/processed/
+data/interim/
+data/external/
+
+# Output directories
+output/
+output_*/
+datasets_analysis_dictionary/output/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+.venv/
+ENV/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# R
+.Rhistory
+.RData
+.Rproj.user
+*.Rproj
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Temporary files
+*.tmp
+*.bak
+*.log
+
+# Excel/Office temporary files
+~$*.xlsx
+~$*.xls
+~$*.docx
+~$*.pptx
+
+# Large data files
+*.csv
+*.xlsx
+*.xls
+*.tsv
+!requirements.txt
+
+# Security - salt files for de-identification
+*_salt.txt
+linkage_map.csv
