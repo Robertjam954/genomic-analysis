@@ -1,15 +1,21 @@
-# Data directories - typically contain large or sensitive files
+# ─── Environment & secrets ────────────────────────────────────────
+.env
+*.env.local
+
+# ─── Private / PHI data (never committed) ─────────────────────────
+data_private/
+
+# ─── Data directories (large / generated) ─────────────────────────
 data/raw/
-data/processed/
 data/interim/
 data/external/
 
-# Output directories
+# ─── Output directories ──────────────────────────────────────────
 output/
 output_*/
 datasets_analysis_dictionary/output/
 
-# Python
+# ─── Python ───────────────────────────────────────────────────────
 __pycache__/
 *.py[cod]
 *$py.class
@@ -35,44 +41,47 @@ wheels/
 .installed.cfg
 *.egg
 
-# R
+# ─── R ────────────────────────────────────────────────────────────
 .Rhistory
 .RData
 .Rproj.user
 *.Rproj
 
-# Jupyter Notebook
+# ─── Jupyter Notebook ────────────────────────────────────────────
 .ipynb_checkpoints
 
-# IDEs
+# ─── IDEs ─────────────────────────────────────────────────────────
 .vscode/
 .idea/
 *.swp
 *.swo
 *~
 
-# OS
+# ─── OS ───────────────────────────────────────────────────────────
 .DS_Store
 Thumbs.db
 
-# Temporary files
+# ─── Temporary files ─────────────────────────────────────────────
 *.tmp
 *.bak
 *.log
 
-# Excel/Office temporary files
+# ─── Excel / Office temporary files ──────────────────────────────
 ~$*.xlsx
 ~$*.xls
 ~$*.docx
 ~$*.pptx
 
-# Large data files
+# ─── Large data files ────────────────────────────────────────────
 *.csv
 *.xlsx
 *.xls
 *.tsv
 !requirements.txt
+!data/processed/**/*.csv
+!data/features/**/*.csv
+!data/splits/**/*.csv
 
-# Security - salt files for de-identification
+# ─── Security — salt files for de-identification ─────────────────
 *_salt.txt
 linkage_map.csv
