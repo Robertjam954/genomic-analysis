@@ -1015,9 +1015,19 @@ def plot_panels(df, top_genes):
 def main():
     # Prefer authoritative merged Excel (merged_genie.xlsx) if present
     # user-provided authoritative path
-    xlsx = r"C:\Users\jamesr4\OneDrive - Memorial Sloan Kettering Cancer Center\Documents\Research\Projects\genomics_brain_mets_genie_bpc\datasets_analysis_dictionary\merged_genie.xlsx"
+    xlsx_candidates = [
+        r"C:\Users\jamesr4\OneDrive - Memorial Sloan Kettering Cancer Center\Documents\Research\Projects\genomics_brain_mets_genie_bpc\datasets_analysis_dictionary\merged_genie.xlsx",
+        os.path.join('datasets_analysis_dictionary', 'merged_genie.xlsx'),
+        os.path.join('output', 'merged_genie.xlsx'),
+        'merged_genie.xlsx',
+    ]
+    xlsx = None
+    for _candidate in xlsx_candidates:
+        if os.path.exists(_candidate):
+            xlsx = _candidate
+            break
     csv = os.path.join('output','fine_gray_ready_from_xlsx_fixed.csv')
-    if os.path.exists(xlsx):
+    if xlsx is not None and os.path.exists(xlsx):
         print('Reading', xlsx)
         try:
             df = pd.read_excel(xlsx, engine='openpyxl')
