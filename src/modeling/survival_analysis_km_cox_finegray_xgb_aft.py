@@ -148,6 +148,10 @@ def prepare_common_covariates(df: pd.DataFrame):
 
     cov_base = df[['BUFFA_HYPOXIA_SCORE','MUT_COUNT','TBL_LOW','TBL_HIGH','AGE','AJCC_STAGE_NUM','ETHNICITY_BIN']].copy()
     X_common = pd.concat([cov_base.reset_index(drop=True), mantis.reset_index(drop=True), subtype.reset_index(drop=True)], axis=1)
+    # Merge dummy columns back into df so downstream functions can find them
+    for col in X_common.columns:
+        if col not in df.columns:
+            df[col] = X_common[col].values
     return X_common
 
 

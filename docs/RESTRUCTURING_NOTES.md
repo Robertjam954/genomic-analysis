@@ -31,18 +31,23 @@ These are identical files (656 lines each). The second file was renamed from a f
 - Line 6: Uses R syntax `c()` in Python code
 - Missing proper function parameter syntax
 
-### Recommendation
+### Resolution
 
-While these issues were identified, they were not fixed to maintain the minimal-change principle. If you wish to address these:
+The following duplicates and broken files have been **deleted**:
 
-1. **Duplicates**: Choose which version to keep and remove the other
-2. **Syntax errors**: Fix the import.py function definition to use proper Python syntax
+1. `src/modeling/run survival models and export summary csv.py` — kept `survival_analysis_km_cox_finegray_xgb_aft.py`
+2. `src/eda/R- descriptive variables preparation, mutation analysis, and visualization.R` — kept `comprehensive_descriptive_analysis.R`
+3. `src/eda/Py_missing data_descriptive_analysis_genetic_descriptive_tables_plots.py` — kept `variable_setup_gene_flagging_plots.py`
+4. `src/collection/import.py` — broken (R syntax in Python); replaced by `fetch_molecular_data.py` + `build_merged_dataset.py`
+5. `#Prepare descriptive variables and summary statistics for the Genomic project.R` — stale root copy of `src/cleaning/prepare_descriptive_vars.r`
+6. `.Rhistory` — session artifact
 
 ## Files Successfully Restructured
 
 - **27 script files** moved to appropriate directories
 - **8 reference files** moved to `references/`
 - **3 files** given proper extensions (.py or .R)
+- **6 duplicate/broken files** removed
 - **2 new files** created (README.md, .gitignore)
 
-All files maintain their original content and functionality.
+All remaining files maintain their original content and functionality.

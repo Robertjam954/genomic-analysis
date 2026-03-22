@@ -53,7 +53,8 @@ LOCAL ONLY (never committed):
 ### Data Collection and Processing (`src/collection/`, `src/cleaning/`)
 
 **Collection:**
-- `import.py` — Import data from various sources
+- `fetch_molecular_data.py` — cBioPortal REST API client for molecular profiles, mutations, and clinical data
+- `build_merged_dataset.py` — Assemble clinical + mutation API data into merged analysis dataset
 
 **Cleaning:**
 - `deidentify.py` / `deidentify_redcap.py` — De-identification scripts for PHI
@@ -64,10 +65,8 @@ LOCAL ONLY (never committed):
 
 ### Exploratory Data Analysis (`src/eda/`)
 
-- `Py_missing data_descriptive_analysis_genetic_descriptive_tables_plots.py` — Missingness analysis and descriptive statistics
-- `variable_setup_gene_flagging_plots.py` — Gene indicator setup and visualization
+- `variable_setup_gene_flagging_plots.py` — Gene indicator setup, missingness analysis, and visualization
 - `comprehensive_descriptive_analysis.R` — Comprehensive descriptive statistics and Table 1/2 generation
-- `R- descriptive variables preparation, mutation analysis, and visualization.R` — Mutation analysis
 - `R- generate descriptive and associational plots.R` — Descriptive visualizations
 - `R - generate plots for missing_associational_correlation_matrix_regression_scatterfacetedbyconfounders.R` — Complex associational plots
 
@@ -76,7 +75,6 @@ LOCAL ONLY (never committed):
 **Survival Analysis:**
 - `survival_analysis_km_cox_finegray_xgb_aft.py` — Comprehensive survival pipeline (Kaplan-Meier, Cox PH, Fine-Gray, XGBoost AFT)
 - `Py- survival and time to event models.py` — Time-to-event modeling
-- `run survival models and export summary csv.py` — Batch survival model execution
 - `time_event_analysis_aft.R` — AFT models in R
 
 **Machine Learning:**
