@@ -933,7 +933,7 @@ def plot_panels(df, top_genes):
     ax1 = panels.add_subplot(1,3,1)
     # ensure DFS_STATUS is numeric 0/1-ish and MANTIS_BIN is string
     df['DFS_STATUS'] = pd.to_numeric(df.get('DFS_STATUS'), errors='coerce')
-    df['MANTIS_BIN'] = df.get('MANTIS_BIN').fillna('Unknown').astype(str)
+    df['MANTIS_BIN'] = df['MANTIS_BIN'].fillna('Unknown').astype(str) if 'MANTIS_BIN' in df.columns else 'Unknown'
     msi_tab = pd.crosstab(df['MANTIS_BIN'], df['DFS_STATUS'])
     # pick two most frequent levels
     msi_levels = msi_tab.sum(axis=1).sort_values(ascending=False).head(2).index.tolist()
@@ -978,7 +978,7 @@ def plot_panels(df, top_genes):
             data.append([0,0])
             continue
         sub = df[df[col]==1]
-        sub['MANTIS_BIN'] = sub.get('MANTIS_BIN').fillna('Unknown').astype(str)
+        sub['MANTIS_BIN'] = sub['MANTIS_BIN'].fillna('Unknown').astype(str) if 'MANTIS_BIN' in sub.columns else 'Unknown'
         msi_tab = pd.crosstab(sub['MANTIS_BIN'], sub['DFS_STATUS'])
         prop = msi_tab.div(msi_tab.sum(axis=1).replace({0:np.nan}), axis=0).fillna(0)
         # pick two most common levels among this subset
@@ -1040,9 +1040,9 @@ def main():
     else:
         raise FileNotFoundError('Neither merged_genie.xlsx nor fine_gray_ready_from_xlsx_fixed.csv found in output/')
     # Basic harmonization
-    df['AGE'] = pd.to_numeric(df.get('AGE'), errors='coerce')
-    df['AJCC_STAGE_NUM'] = pd.to_numeric(df.get('AJCC_STAGE_NUM'), errors='coerce')
-    df['MANTIS_BIN'] = df.get('MANTIS_BIN').fillna('Unknown')
+    df['AGE'] = pd.to_numeric(df['AGE'], errors='coerce') if 'AGE' in df.columns else np.nan
+    df['AJCC_STAGE_NUM'] = pd.to_numeric(df['AJCC_STAGE_NUM'], errors='coerce') if 'AJCC_STAGE_NUM' in df.columns else np.nan
+    df['MANTIS_BIN'] = df['MANTIS_BIN'].fillna('Unknown') if 'MANTIS_BIN' in df.columns else 'Unknown'
     # normalize column names (map Subtpe -> SUBTYPE etc.)
     df = normalize_columns(df)
     # If DFS_STATUS not present or all-NA, fall back to PFS_EVENT (common in file)
@@ -1082,15 +1082,42 @@ def main():
     print('Wrote patient_characteristics.csv, top5_genes_by_group.csv, and', out_png)
 
     # --- clustered scatter plot: receptor subtype (x) vs mutation count (y), color by DFS_STATUS ---
-    # receptor subtype column candidate names
-    subtype_col = None
-    for cand in ['RECEPTOR_SUBTYPE','SUBTYPE','RECEPTOR_TYPE','RECEPTOR_SUBTYPE_DETAIL']:
-        if cand in df.columns:
-            subtype_col = cand
-            break
-    if subtype_col is None:
-        # fallback to SUBTYPE
-        subtype_col = 'SUBTYPE'
+    # Derive receptor subtype from ER/PR/HER2 IHC status if available
+    er_col = next((c for c in ['ER_STATUS_BY_IHC','ER_STATUS'] if c in df.columns), None)
+    pr_col = next((c for c in ['PR_STATUS_BY_IHC','PR_STATUS'] if c in df.columns), None)
+    her2_col = next((c for c in ['IHC_HER2','HER2_FISH_STATUS','HER2_STATUS'] if c in df.columns), None)
+
+    if er_col and pr_col and her2_col:
+        def _receptor_subtype(row):
+            er = str(row.get(er_col, '')).strip().upper()
+            pr = str(row.get(pr_col, '')).strip().upper()
+            h2 = str(row.get(her2_col, '')).strip().upper()
+            er_pos = er.startswith('POS')
+            pr_pos = pr.startswith('POS')
+            h2_pos = h2.startswith('POS')
+            hr_pos = er_pos or pr_pos
+            if hr_pos and h2_pos:
+                return 'HR+/HER2+'
+            elif hr_pos and not h2_pos:
+                return 'HR+/HER2-'
+            elif not hr_pos and h2_pos:
+                return 'HR-/HER2+'
+            elif not hr_pos and not h2_pos:
+                if er in ('','NAN','NONE','[NOT EVALUATED]') and pr in ('','NAN','NONE','[NOT EVALUATED]') and h2 in ('','NAN','NONE','[NOT EVALUATED]'):
+                    return np.nan
+                return 'Triple Negative'
+            return np.nan
+        df['RECEPTOR_SUBTYPE'] = df.apply(_receptor_subtype, axis=1)
+        subtype_col = 'RECEPTOR_SUBTYPE'
+    else:
+        # fallback: look for pre-existing receptor subtype column
+        subtype_col = None
+        for cand in ['RECEPTOR_SUBTYPE','RECEPTOR_TYPE','RECEPTOR_SUBTYPE_DETAIL']:
+            if cand in df.columns:
+                subtype_col = cand
+                break
+        if subtype_col is None:
+            subtype_col = 'SUBTYPE'
 
     # compute mutation count from G__ columns if not present
     gene_cols = [c for c in df.columns if c.startswith('G__')]
@@ -1098,11 +1125,11 @@ def main():
             # prefer explicit variant count if present in the merged Excel
             if 'variant_allele_count' in df.columns:
                 df['MUT_COUNT'] = pd.to_numeric(df['variant_allele_count'], errors='coerce').fillna(0)
+            elif gene_cols:
+                df['MUT_COUNT'] = df[gene_cols].sum(axis=1)
             else:
-                if gene_cols:
-                    df['MUT_COUNT'] = df[gene_cols].sum(axis=1)
-                mc = pd.to_numeric(df.get('MUT_COUNT'), errors='coerce')
-                df['MUT_COUNT'] = mc.fillna(0)
+                df['MUT_COUNT'] = 0
+    df['MUT_COUNT'] = pd.to_numeric(df['MUT_COUNT'], errors='coerce').fillna(0)
 
     scatter_out = os.path.join('output','figures','dfs_clustered_scatter.png')
     # prepare plotting DataFrame
