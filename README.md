@@ -53,7 +53,8 @@ LOCAL ONLY (never committed):
 ### Data Collection and Processing (`src/collection/`, `src/cleaning/`)
 
 **Collection:**
-- `import.py` — Import data from various sources
+- `fetch_molecular_data.py` — cBioPortal REST API client for molecular profiles, mutations, and clinical data
+- `build_merged_dataset.py` — Assemble clinical + mutation API data into merged analysis dataset
 
 **Cleaning:**
 - `deidentify.py` / `deidentify_redcap.py` — De-identification scripts for PHI
@@ -64,10 +65,8 @@ LOCAL ONLY (never committed):
 
 ### Exploratory Data Analysis (`src/eda/`)
 
-- `Py_missing data_descriptive_analysis_genetic_descriptive_tables_plots.py` — Missingness analysis and descriptive statistics
-- `variable_setup_gene_flagging_plots.py` — Gene indicator setup and visualization
+- `variable_setup_gene_flagging_plots.py` — Gene indicator setup, missingness analysis, and visualization
 - `comprehensive_descriptive_analysis.R` — Comprehensive descriptive statistics and Table 1/2 generation
-- `R- descriptive variables preparation, mutation analysis, and visualization.R` — Mutation analysis
 - `R- generate descriptive and associational plots.R` — Descriptive visualizations
 - `R - generate plots for missing_associational_correlation_matrix_regression_scatterfacetedbyconfounders.R` — Complex associational plots
 
@@ -76,7 +75,6 @@ LOCAL ONLY (never committed):
 **Survival Analysis:**
 - `survival_analysis_km_cox_finegray_xgb_aft.py` — Comprehensive survival pipeline (Kaplan-Meier, Cox PH, Fine-Gray, XGBoost AFT)
 - `Py- survival and time to event models.py` — Time-to-event modeling
-- `run survival models and export summary csv.py` — Batch survival model execution
 - `time_event_analysis_aft.R` — AFT models in R
 
 **Machine Learning:**
@@ -95,6 +93,31 @@ LOCAL ONLY (never committed):
 **Tables** (`src/reports/tables/`):
 - `table_1_and_2.R` — Manuscript tables
 - `BBB regulation table.py` — Blood-brain barrier regulation tables
+
+## Notebooks
+
+Ordered analysis notebooks in `notebooks/`:
+
+| # | Notebook | Description |
+|---|---|---|
+| 01 | `xgb_aft_1020.ipynb` | XGBoost AFT exploration (original) |
+| 02 | `02_dimensionality_reduction_pca.ipynb` | PCA on `G__*` gene indicators — scree plot, biplot, variance analysis |
+| 03 | `03_clustering_gene_features.ipynb` | K-Means, hierarchical, DBSCAN, GMM clustering on gene features |
+| 04 | `04_regression_gene_expression.ipynb` | Linear & logistic regression baselines before survival modeling |
+
+Notebooks 02–04 adapted from [SalvatoreRa/tutorial](https://github.com/SalvatoreRa/tutorial) genomic series (Apache-2.0).
+
+## Evaluation (`eval/`)
+
+- [`metric_definitions.md`](eval/metric_definitions.md) — All metrics used across the pipeline (C-index, SHAP, AUC, silhouette, etc.) with experiment tracking schema
+- [`missing_data_classification.py`](eval/missing_data_classification.py) — Classify column missingness as MCAR / MAR / MNAR via Little's test, point-biserial correlations, and KS distribution tests
+
+```bash
+# Run missingness classification
+python eval/missing_data_classification.py \
+  --input datasets_analysis_dictionary/merged_genie.xlsx \
+  --outdir data/processed
+```
 
 ## Survival and ML Analysis Pipeline
 
@@ -126,12 +149,20 @@ python "src/cleaning/extract variables from dataset.py" \
 
 ## References
 
-The `references/` directory contains:
+See [`references/REFERENCES_INDEX.md`](references/REFERENCES_INDEX.md) for a full curated index, including:
+
+**Local files:**
 - Python cheat sheets and quick references
 - R Tidyverse cheat sheets
-- Mathematical modeling references
+- Mathematical modeling of the metastatic process
 - AFT model assumptions documentation
 - Excel quick reference
+
+**External (linked) — from [SalvatoreRa/tutorial](https://github.com/SalvatoreRa/tutorial):**
+- Genomic series: PCA, clustering, regression on gene expression data
+- Tabular learning: tree-vs-DL benchmarks, missing data (MAR/MCAR/MNAR), synthetic data, KANs
+- AI in medicine: scGPT, Med-PaLM, ClinicalGPT, LLMs for gene editing
+- Graph ML: NetworkX, iGraph, graph visualization (potential gene-interaction extension)
 
 ## Notes
 
