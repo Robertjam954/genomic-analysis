@@ -8,6 +8,12 @@
 
 ---
 
+## About
+
+**genomic-analysis-scripts** is a clinical-genomic analysis repository focused on brain metastasis outcomes in breast cancer. It combines data engineering, exploratory analysis, survival modeling, and publication-oriented reporting in one reproducible workflow.
+
+---
+
 ## Overview
 
 **genomic-analysis-scripts** ingests AACR GENIE BPC, TCGA, and MSK-IMPACT data and runs a reproducible end-to-end pipeline:
@@ -26,14 +32,15 @@
 
 ## Table of Contents
 
-1. [Project Structure](#project-structure)
-2. [Quick Start](#quick-start)
-3. [Source Code](#source-code)
-4. [Notebooks](#notebooks)
-5. [Evaluation](#evaluation)
-6. [Documentation](#documentation)
-7. [References](#references)
-8. [Notes](#notes)
+1. [About](#about)
+2. [Project Structure](#project-structure)
+3. [Quick Start](#quick-start)
+4. [Source Code](#source-code)
+5. [Notebooks](#notebooks)
+6. [Evaluation](#evaluation)
+7. [Documentation](#documentation)
+8. [References](#references)
+9. [Notes](#notes)
 
 ---
 
@@ -233,4 +240,3 @@ See [`references/REFERENCES_INDEX.md`](references/REFERENCES_INDEX.md) for the f
 - Private/PHI data lives in `DATA_PRIVATE_DIR` (set in `.env`, never committed)
 - Column names are automatically normalized (snake_case) across most scripts
 - Most scripts support both CSV and Excel input formats
-
