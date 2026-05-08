@@ -8,6 +8,7 @@ data/
 reports/
 
 # ─── Private / PHI data (never committed) ─────────────────────────
+# Note: `data_private/` is a separate external/private path convention.
 data_private/
 
 # ─── Data directories (large / generated) ─────────────────────────
