@@ -2,6 +2,11 @@
 .env
 *.env.local
 
+# ─── Hidden top-level directories ──────────────────────────────────
+docs/
+data/
+reports/
+
 # ─── Private / PHI data (never committed) ─────────────────────────
 data_private/
 
