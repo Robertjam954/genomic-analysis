@@ -15,6 +15,12 @@ output/
 output_*/
 datasets_analysis_dictionary/output/
 
+# ─── Reports (generated figures and tables) ───────────────────────
+reports/figures/*
+reports/tables/*
+!reports/figures/.gitkeep
+!reports/tables/.gitkeep
+
 # ─── Python ───────────────────────────────────────────────────────
 __pycache__/
 *.py[cod]
@@ -78,9 +84,6 @@ Thumbs.db
 *.xls
 *.tsv
 !requirements.txt
-!data/processed/**/*.csv
-!data/features/**/*.csv
-!data/splits/**/*.csv
 
 # ─── Security — salt files for de-identification ─────────────────
 *_salt.txt
