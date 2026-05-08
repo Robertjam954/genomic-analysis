@@ -3,9 +3,9 @@
 *.env.local
 
 # ─── Hidden top-level directories ──────────────────────────────────
-docs/
-data/
-reports/
+/docs/
+/data/
+/reports/
 
 # ─── Private / PHI data (never committed) ─────────────────────────
 # Note: `data_private/` is a separate external/private path convention.
